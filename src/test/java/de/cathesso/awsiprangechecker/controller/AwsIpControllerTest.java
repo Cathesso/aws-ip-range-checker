@@ -20,12 +20,12 @@ public class AwsIpControllerTest {
     private final RestTemplate mockedTemplate = mock(RestTemplate.class);
     private final AwsIpRangeService service = new AwsIpRangeService(mockedTemplate);
     private final AwsIpController controller = new AwsIpController(service);
+    private final String linebreak = System.getProperty("line.separator");
 
     @Test
     void testRegionFilter() {
         //Given
-        String expected = "42.42.42.42\r\n481.516.23.42\r\n1701.1138.1337.5141";
-        expected = expected.replace("\r\n", System.getProperty("line.separator"));
+        String expected = "42.42.42.42" + linebreak + "481.516.23.42" + linebreak + "1701.1138.1337.5141";
         
         when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeResponse.class))
         .thenReturn(ResponseEntity.ok(mockedApiResponse));
@@ -33,10 +33,7 @@ public class AwsIpControllerTest {
         String region = "us";
         String actual = controller.regionFilter(region);
         //Then
-
-        
         assertThat(actual, is(expected));
-
     }
 
     AwsIpRangeResponse mockedApiResponse = AwsIpRangeResponse.builder()
