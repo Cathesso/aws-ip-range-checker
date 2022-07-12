@@ -104,6 +104,7 @@ public class AwsIpRangeServiceTest {
     void testgetServerIPsAndConvertToString() {
         //Given
         String expected = "192.168.0.0\r\n48.151.6.23\r\n1.23.45.67\r\n42.42.42.42";
+        expected = expected.replace("\r\n", System.getProperty("line.separator"));
 
         List<Server> mockedServersAll = List.of(Server.builder()
         .ipPrefix("192.168.0.0")

@@ -25,6 +25,7 @@ public class AwsIpControllerTest {
     void testRegionFilter() {
         //Given
         String expected = "42.42.42.42\r\n481.516.23.42\r\n1701.1138.1337.5141";
+        expected = expected.replace("\r\n", System.getProperty("line.separator"));
         
         when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeResponse.class))
         .thenReturn(ResponseEntity.ok(mockedApiResponse));
