@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import de.cathesso.awsiprangechecker.model.AwsIpRangeResponse;
+import de.cathesso.awsiprangechecker.model.AwsIpRangeDTO;
 import de.cathesso.awsiprangechecker.model.Server;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -57,9 +57,9 @@ public class AwsIpRangeServiceTest {
     }
 
     @Test
+    @DisplayName("All servers of region 'AP' should be filtered")
     void testFilterServerForRegions() {
         //Given
-
         String region = "ap";
 
         List<Server> givenServers = List.of(Server.builder()
@@ -102,6 +102,7 @@ public class AwsIpRangeServiceTest {
     }
 
     @Test
+    @DisplayName("All IPs should be extracted and from a given server list and turned into a String with linebreaks")
     void testgetServerIPsAndConvertToString() {
         //Given
         String expected = "192.168.0.0" + linebreak + "48.151.6.23" + linebreak + "1.23.45.67" + linebreak + "42.42.42.42";
@@ -138,11 +139,12 @@ public class AwsIpRangeServiceTest {
     }
 
     @Test
+    @DisplayName("Integrating all Service methods: Should give a String of filtered server IPs")
     void testgetIPsForeSpecificAWSRegion() {
         //Given
         String region = "eu";
         String expected = "192.168.0.0" + linebreak + "48.151.6.23";
-        when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeResponse.class))
+        when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeDTO.class))
         .thenReturn(ResponseEntity.ok(mockedApiResponse));
         //When
         String actual = service.getIPsForeSpecificAWSRegion(region);
@@ -150,7 +152,21 @@ public class AwsIpRangeServiceTest {
         assertThat(actual, is(expected));
     }
 
-    AwsIpRangeResponse mockedApiResponse = AwsIpRangeResponse.builder()
+    @Test
+    @DisplayName("Integrating all Service methods: Should give a String for no available Servers")
+    void testgetIPsForeSpecificAWSRegionNoServers() {
+        //Given
+        String region = "cn";
+        String expected = "I'm Sorry, but I am afraid, there are no servers for this region.";
+        when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeDTO.class))
+        .thenReturn(ResponseEntity.ok(mockedApiResponse));
+        //When
+        String actual = service.getIPsForeSpecificAWSRegion(region);
+        //Then
+        assertThat(actual, is(expected));
+    }
+
+    AwsIpRangeDTO mockedApiResponse = AwsIpRangeDTO.builder()
     .syncToken("123")
     .createDate("456")
     .servers(List.of(Server.builder()

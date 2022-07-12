@@ -1,10 +1,11 @@
 package de.cathesso.awsiprangechecker.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import de.cathesso.awsiprangechecker.model.AwsIpRangeResponse;
+import de.cathesso.awsiprangechecker.model.AwsIpRangeDTO;
 import de.cathesso.awsiprangechecker.model.Server;
 import de.cathesso.awsiprangechecker.service.AwsIpRangeService;
 
@@ -23,20 +24,35 @@ public class AwsIpControllerTest {
     private final String linebreak = System.getProperty("line.separator");
 
     @Test
+    @DisplayName("Integrating Controller and Service: US servers should be shown as String")
     void testRegionFilter() {
         //Given
         String expected = "42.42.42.42" + linebreak + "481.516.23.42" + linebreak + "1701.1138.1337.5141";
+
+        String region = "us";
         
-        when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeResponse.class))
+        when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeDTO.class))
         .thenReturn(ResponseEntity.ok(mockedApiResponse));
         //When
-        String region = "us";
         String actual = controller.regionFilter(region);
         //Then
         assertThat(actual, is(expected));
     }
 
-    AwsIpRangeResponse mockedApiResponse = AwsIpRangeResponse.builder()
+    @Test
+    @DisplayName("Invalid regions result in an explanation")
+    void testRegionFilterWrongRegion() {
+        //Given
+        String expected = "I'm sorry, I'm afraid 42 is not a valid region. Please use one of the following: All, EU, US,AP, CN, SA, AF or CA. Thank you.";
+        
+        String region = "42";
+        //When
+        String actual = controller.regionFilter(region);
+        //Then
+        assertThat(actual, is(expected));
+    }
+
+    AwsIpRangeDTO mockedApiResponse = AwsIpRangeDTO.builder()
     .syncToken("123")
     .createDate("456")
     .servers(List.of(Server.builder()
@@ -76,5 +92,4 @@ public class AwsIpControllerTest {
         .networkBorderGroup("cn-central")
         .build()))
     .build();
-
 }

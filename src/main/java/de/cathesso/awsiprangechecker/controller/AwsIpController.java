@@ -11,7 +11,7 @@ import de.cathesso.awsiprangechecker.service.*;
 @RequestMapping(value = "/awsChecker", produces = "text/plain")
 public class AwsIpController {
 
-    private static AwsIpRangeService awsIpRangeService;
+    private final AwsIpRangeService awsIpRangeService;
 
     public AwsIpController(AwsIpRangeService awsIpRangeService){
         this.awsIpRangeService = awsIpRangeService;

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AwsIpRangeResponse {
+public class AwsIpRangeDTO {
     private String syncToken;
     private String createDate;
     @JsonProperty("prefixes")

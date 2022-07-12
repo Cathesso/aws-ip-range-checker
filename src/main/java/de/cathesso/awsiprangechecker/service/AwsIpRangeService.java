@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 
-import de.cathesso.awsiprangechecker.model.AwsIpRangeResponse;
+import de.cathesso.awsiprangechecker.model.AwsIpRangeDTO;
 import de.cathesso.awsiprangechecker.model.Server;
 
 @Service
@@ -19,33 +19,27 @@ public class AwsIpRangeService {
         this.restTemplate = restTemplate;
     }
 
-        //0. Call functions
         public String getIPsForeSpecificAWSRegion(String region){
-            AwsIpRangeResponse ipResponse = getAwsApiResponse();
+            AwsIpRangeDTO ipResponse = getAwsApiResponse();
             List<Server> extractedServers = extractServersFromApiResponse(ipResponse);
             List<Server> filteredServers = filterServersForRegion(region, extractedServers);
             return getServerIPsAndConvertToString(filteredServers);
     }
 
-
-
-        //1. Get all Data
-        public AwsIpRangeResponse getAwsApiResponse() {
+        public AwsIpRangeDTO getAwsApiResponse() {
 
             String awsIpRangeUrl = "https://ip-ranges.amazonaws.com/ip-ranges.json";
-            ResponseEntity<AwsIpRangeResponse> response = restTemplate.getForEntity(awsIpRangeUrl, AwsIpRangeResponse.class);
+            ResponseEntity<AwsIpRangeDTO> response = restTemplate.getForEntity(awsIpRangeUrl, AwsIpRangeDTO.class);
             if (response.getBody() != null) {
                 return response.getBody();
             }
             return null;
         }
 
-        //2. Extract all Servers from the API
-        public List<Server> extractServersFromApiResponse(AwsIpRangeResponse response){
+        public List<Server> extractServersFromApiResponse(AwsIpRangeDTO response){
             return response.getServers();
         }
 
-        //3. Filter to only my specific IP Range
         public List<Server> filterServersForRegion(String region, List<Server> serverList){
             List<Server> allServers = serverList;
             if (region.equals("all")){
@@ -54,7 +48,6 @@ public class AwsIpRangeService {
             return allServers.stream().filter(server -> server.getRegion().startsWith(region + "-")).collect(Collectors.toList());
         }
 
-        //4. Display only IPs and add linebreaks
         public String getServerIPsAndConvertToString (List<Server> servers){
             List<String> filteredIPs = servers.stream().map(Server::getIpPrefix).collect(Collectors.toList());
             if (filteredIPs.isEmpty())
