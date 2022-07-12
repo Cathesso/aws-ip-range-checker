@@ -141,7 +141,8 @@ public class AwsIpRangeServiceTest {
     void testgetIPsForeSpecificAWSRegion() {
         //Given
         String region = "eu";
-        String expected = "192.168.0.0\r\n48.151.6.23";
+        String expected = "192.168.0.0" + System.getProperty("line.separator") + "48.151.6.23";
+        //expected = expected.replace("\r\n", System.getProperty("line.separator"));
         when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeResponse.class))
         .thenReturn(ResponseEntity.ok(mockedApiResponse));
         //When
