@@ -14,6 +14,7 @@ public class AwsIpController {
     private static AwsIpRangeService awsIpRangeService;
 
     public AwsIpController(AwsIpRangeService awsIpRangeService){
+        this.awsIpRangeService = awsIpRangeService;
     }
 
 
