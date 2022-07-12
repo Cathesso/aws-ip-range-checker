@@ -4,7 +4,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import de.cathesso.awsiprangechecker.service.*;
 
 @RestController
@@ -17,8 +16,6 @@ public class AwsIpController {
         this.awsIpRangeService = awsIpRangeService;
     }
 
-
-    
     @GetMapping("")
     public String regionFilter (@RequestParam String region){
         if(region.isEmpty()){
@@ -34,6 +31,5 @@ public class AwsIpController {
         }
 
     }
-
 
 }

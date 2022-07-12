@@ -2,12 +2,9 @@ package de.cathesso.awsiprangechecker.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-
 import de.cathesso.awsiprangechecker.model.AwsIpRangeDTO;
 import de.cathesso.awsiprangechecker.model.Server;
 

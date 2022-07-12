@@ -4,12 +4,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-
 import de.cathesso.awsiprangechecker.model.AwsIpRangeDTO;
 import de.cathesso.awsiprangechecker.model.Server;
 import static org.hamcrest.MatcherAssert.assertThat;
