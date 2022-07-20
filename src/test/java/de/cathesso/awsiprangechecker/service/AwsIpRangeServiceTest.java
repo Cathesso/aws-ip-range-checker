@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import de.cathesso.awsiprangechecker.model.AwsIpRangeDTO;
@@ -17,8 +18,8 @@ public class AwsIpRangeServiceTest {
 
     private final RestTemplate mockedTemplate = mock(RestTemplate.class);
     private final AwsIpRangeService service = new AwsIpRangeService(mockedTemplate);
-    private final String linebreak = System.getProperty("line.separator");
-
+    @Value("${AWS_IP_DATABASE}")
+    private String awsIpRangeUrl;
 
     @Test
     @DisplayName("Integrating all Service methods: Should give a List of filtered Servers")
@@ -37,7 +38,7 @@ public class AwsIpRangeServiceTest {
         .service("OTTO")
         .networkBorderGroup("eu-south")
         .build());
-        when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeDTO.class))
+        when(mockedTemplate.getForEntity(awsIpRangeUrl, AwsIpRangeDTO.class))
         .thenReturn(ResponseEntity.ok(mockedApiResponse));
         //When
         List<Server> actual = service.getIPsForSpecificAWSRegion(region);
