@@ -46,6 +46,7 @@ public class AwsIpRangeServiceTest {
     }
 
 //ToDo: Add test for region without servers
+//ToDo: Add test for IPv6
 
     AwsIpRangeDTO mockedApiResponse = AwsIpRangeDTO.builder()
     .syncToken("123")

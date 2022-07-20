@@ -16,4 +16,6 @@ public class AwsIpRangeDTO {
     private String createDate;
     @JsonProperty("prefixes")
     private List<Server> servers;
+    @JsonProperty("ipv6_prefixes")
+    private List<Server> serversv6;
 }

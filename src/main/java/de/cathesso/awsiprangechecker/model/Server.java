@@ -1,5 +1,6 @@
 package de.cathesso.awsiprangechecker.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Server {
     @JsonProperty("ip_prefix")
+    @JsonAlias("ipv6_prefix")
     private String ipPrefix;
     private String region;
     private String service;

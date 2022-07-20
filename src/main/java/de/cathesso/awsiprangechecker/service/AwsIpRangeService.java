@@ -2,6 +2,8 @@ package de.cathesso.awsiprangechecker.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -33,7 +35,7 @@ public class AwsIpRangeService {
         }
 
         private List<Server> extractServersFromApiResponse(AwsIpRangeDTO response){
-            return response.getServers();
+            return Stream.concat(response.getServers().stream(), response.getServersv6().stream()).toList();
         }
 
         private List<Server> filterServersForRegion(String region, List<Server> serverList){
