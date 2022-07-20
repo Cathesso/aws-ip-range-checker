@@ -2,6 +2,7 @@ package de.cathesso.awsiprangechecker.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import de.cathesso.awsiprangechecker.model.AwsIpRangeDTO;
@@ -19,6 +20,8 @@ public class AwsIpControllerTest {
     private final AwsIpRangeService service = new AwsIpRangeService(mockedTemplate);
     private final AwsIpController controller = new AwsIpController(service);
     private final String linebreak = System.getProperty("line.separator");
+    @Value("${AWS_IP_DATABASE}")
+    private String awsIpRangeUrl;
 
     @Test
     @DisplayName("Integrating Controller and Service: US servers should be shown as String")
@@ -28,7 +31,7 @@ public class AwsIpControllerTest {
 
         String region = "us";
         
-        when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeDTO.class))
+        when(mockedTemplate.getForEntity(awsIpRangeUrl, AwsIpRangeDTO.class))
         .thenReturn(ResponseEntity.ok(mockedApiResponse));
         //When
         String actual = controller.regionFilter(region);
