@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import de.cathesso.awsiprangechecker.model.AwsIpRangeDTO;
 import de.cathesso.awsiprangechecker.model.Server;
+import java.util.Collections;
 
 @Service
 public class AwsIpRangeService {
@@ -35,7 +36,18 @@ public class AwsIpRangeService {
         }
 
         private List<Server> extractServersFromApiResponse(AwsIpRangeDTO response){
-            return Stream.concat(response.getServers().stream(), response.getServersv6().stream()).toList();
+            List<Server> ipv4Server = response.getServers();
+            List<Server> ipv6Server = response.getServersv6();
+            if (ipv4Server != null && ipv6Server != null){
+                return Stream.concat(response.getServers().stream(), response.getServersv6().stream()).toList();
+            }
+            else if (ipv4Server == null){
+                return response.getServersv6();
+            }
+            else if (ipv6Server == null){
+                return response.getServers();
+            }
+            return Collections.emptyList();
         }
 
         private List<Server> filterServersForRegion(String region, List<Server> serverList){
