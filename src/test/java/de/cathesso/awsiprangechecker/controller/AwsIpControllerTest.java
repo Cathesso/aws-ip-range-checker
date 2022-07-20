@@ -49,6 +49,20 @@ public class AwsIpControllerTest {
         assertThat(actual, is(expected));
     }
 
+    // @Test
+    // @DisplayName("Integrating all Service methods: Should give a String for no available Servers")
+    // void testgetIPsForeSpecificAWSRegionNoServers() {
+    //     //Given
+    //     String region = "cn";
+    //     String expected = "I'm Sorry, but I am afraid, there are no servers for this region.";
+    //     when(mockedTemplate.getForEntity("https://ip-ranges.amazonaws.com/ip-ranges.json", AwsIpRangeDTO.class))
+    //     .thenReturn(ResponseEntity.ok(mockedApiResponse));
+    //     //When
+    //     String actual = service.getIPsForSpecificAWSRegion(region);
+    //     //Then
+    //     assertThat(actual, is(expected));
+    // }
+
     AwsIpRangeDTO mockedApiResponse = AwsIpRangeDTO.builder()
     .syncToken("123")
     .createDate("456")

@@ -16,14 +16,13 @@ public class AwsIpRangeService {
         this.restTemplate = restTemplate;
     }
 
-        public String getIPsForeSpecificAWSRegion(String region){
+        public List<Server> getIPsForSpecificAWSRegion(String region){
             AwsIpRangeDTO ipResponse = getAwsApiResponse();
             List<Server> extractedServers = extractServersFromApiResponse(ipResponse);
-            List<Server> filteredServers = filterServersForRegion(region, extractedServers);
-            return getServerIPsAndConvertToString(filteredServers);
+            return filterServersForRegion(region, extractedServers);
     }
 
-        public AwsIpRangeDTO getAwsApiResponse() {
+        private AwsIpRangeDTO getAwsApiResponse() {
 
             String awsIpRangeUrl = "https://ip-ranges.amazonaws.com/ip-ranges.json";
             ResponseEntity<AwsIpRangeDTO> response = restTemplate.getForEntity(awsIpRangeUrl, AwsIpRangeDTO.class);
@@ -33,24 +32,16 @@ public class AwsIpRangeService {
             return null;
         }
 
-        public List<Server> extractServersFromApiResponse(AwsIpRangeDTO response){
+        private List<Server> extractServersFromApiResponse(AwsIpRangeDTO response){
             return response.getServers();
         }
 
-        public List<Server> filterServersForRegion(String region, List<Server> serverList){
+        private List<Server> filterServersForRegion(String region, List<Server> serverList){
             List<Server> allServers = serverList;
             if (region.equals("all")){
                 return allServers;
             }
             return allServers.stream().filter(server -> server.getRegion().startsWith(region + "-")).collect(Collectors.toList());
-        }
-
-        public String getServerIPsAndConvertToString (List<Server> servers){
-            List<String> filteredIPs = servers.stream().map(Server::getIpPrefix).collect(Collectors.toList());
-            if (filteredIPs.isEmpty())
-            {return "I'm Sorry, but I am afraid, there are no servers for this region.";}
-            else 
-            {return filteredIPs.toString().replace(", ", System.getProperty("line.separator")).replace("[", "").replace("]", "");}
         }
     
 }
